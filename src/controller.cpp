@@ -1,41 +1,23 @@
 #include "controller.h"
 #include <iostream>
 #include "SDL.h"
-#include "snake.h"
 
-void Controller::ChangeDirection(Snake &snake, Snake::Direction input,
-                                 Snake::Direction opposite) const {
-  if (snake.direction != opposite || snake.size == 1) snake.direction = input;
-  return;
-}
-
-void Controller::HandleInput(bool &running, Snake &snake) const {
-  SDL_Event e;
-  while (SDL_PollEvent(&e)) {
-    if (e.type == SDL_QUIT) {
-      running = false;
-    } else if (e.type == SDL_KEYDOWN) {
-      switch (e.key.keysym.sym) {
-        case SDLK_UP:
-          ChangeDirection(snake, Snake::Direction::kUp,
-                          Snake::Direction::kDown);
-          break;
-
-        case SDLK_DOWN:
-          ChangeDirection(snake, Snake::Direction::kDown,
-                          Snake::Direction::kUp);
-          break;
-
-        case SDLK_LEFT:
-          ChangeDirection(snake, Snake::Direction::kLeft,
-                          Snake::Direction::kRight);
-          break;
-
-        case SDLK_RIGHT:
-          ChangeDirection(snake, Snake::Direction::kRight,
-                          Snake::Direction::kLeft);
-          break;
-      }
+void Controller::HandleInput(bool &running, Spaceship &spaceship, std::vector<Missile> &missiles, Mouse &mouse) {
+    SDL_Event e;
+    int mouse_x, mouse_y;
+    SDL_GetMouseState(&mouse_x, &mouse_y);
+    mouse.definePosition(mouse_x, mouse_y);
+    spaceship.setAngle(mouse_x, mouse_y);
+    while (SDL_PollEvent(&e)) {
+        if (e.type == SDL_QUIT) {
+            running = false;
+        } else if (e.type == SDL_MOUSEBUTTONDOWN) {
+            Missile missile{};
+            missile.setSpeed(300.0,spaceship.getAngle());
+            missile.setAngle(spaceship.getAngle());
+            Coordinate missile_init_pos = spaceship.getShootingPoint();
+            missile.definePosition((int) missile_init_pos.x, (int) missile_init_pos.y);
+            missiles.push_back(missile);
+        }
     }
-  }
 }

@@ -1,19 +1,18 @@
 #include "renderer.h"
 #include <iostream>
 #include <string>
+#include <cmath>
 
 Renderer::Renderer(const std::size_t screen_width,
-                   const std::size_t screen_height,
-                   const std::size_t grid_width, const std::size_t grid_height)
+                   const std::size_t screen_height)
     : screen_width(screen_width),
-      screen_height(screen_height),
-      grid_width(grid_width),
-      grid_height(grid_height) {
+      screen_height(screen_height) {
   // Initialize SDL
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cerr << "SDL could not initialize.\n";
     std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
   }
+  SDL_ShowCursor(0);
 
   // Create Window
   sdl_window = SDL_CreateWindow("Snake Game", SDL_WINDOWPOS_CENTERED,
@@ -38,44 +37,42 @@ Renderer::~Renderer() {
   SDL_Quit();
 }
 
-void Renderer::Render(Snake const snake, SDL_Point const &food) {
-  SDL_Rect block;
-  block.w = screen_width / grid_width;
-  block.h = screen_height / grid_height;
+void Renderer::Render(Spaceship &spaceship, std::vector<Missile> &missiles, Mouse &mouse, Asteroid &asteroid) {
+    // Clear screen
+    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderClear(sdl_renderer);
 
-  // Clear screen
-  SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
-  SDL_RenderClear(sdl_renderer);
+    // aimcross rendering
+    mouse.loadTexture(sdl_renderer);
+    SDL_Rect dest_aimcross = mouse.getRectPos();
+    SDL_QueryTexture(mouse.getTexture(), NULL, NULL, &dest_aimcross.w, &dest_aimcross.h);
+    SDL_RenderCopyEx(sdl_renderer, mouse.getTexture(), NULL, &dest_aimcross, 90.0, NULL, SDL_FLIP_NONE);
 
-  // Render food
-  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
-  block.x = food.x * block.w;
-  block.y = food.y * block.h;
-  SDL_RenderFillRect(sdl_renderer, &block);
+    // missiles rendering
+    for (Missile &m: missiles)
+    {
+        m.loadTexture(sdl_renderer);
+        SDL_Rect dest_m = m.getRectPos();
+        SDL_QueryTexture(m.getTexture(), NULL, NULL, &dest_m.w, &dest_m.h);
+        SDL_RenderCopyEx(sdl_renderer, m.getTexture(), NULL, &dest_m, m.getAngle(), NULL, SDL_FLIP_NONE);
+    }
+    // spaceship rendering
+    spaceship.loadTexture(sdl_renderer);
+    SDL_Rect dest_spaceship = spaceship.getRectPos();
+    SDL_QueryTexture(spaceship.getTexture(), NULL, NULL, &dest_spaceship.w, &dest_spaceship.h);
+    SDL_RenderCopyEx(sdl_renderer, spaceship.getTexture(), NULL, &dest_spaceship, spaceship.getAngle(), NULL, SDL_FLIP_NONE);
 
-  // Render snake's body
-  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-  for (SDL_Point const &point : snake.body) {
-    block.x = point.x * block.w;
-    block.y = point.y * block.h;
-    SDL_RenderFillRect(sdl_renderer, &block);
-  }
+    // asteroid rendering
+    asteroid.loadTexture(sdl_renderer);
+    SDL_Rect dest_asteroid = asteroid.getRectPos();
+    SDL_QueryTexture(asteroid.getTexture(), NULL, NULL, &dest_asteroid.w, &dest_asteroid.h);
+    SDL_RenderCopy(sdl_renderer, asteroid.getTexture(), NULL, &dest_asteroid);
 
-  // Render snake's head
-  block.x = static_cast<int>(snake.head_x) * block.w;
-  block.y = static_cast<int>(snake.head_y) * block.h;
-  if (snake.alive) {
-    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
-  } else {
-    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
-  }
-  SDL_RenderFillRect(sdl_renderer, &block);
-
-  // Update Screen
-  SDL_RenderPresent(sdl_renderer);
+    // Update Screen
+    SDL_RenderPresent(sdl_renderer);
 }
 
 void Renderer::UpdateWindowTitle(int score, int fps) {
-  std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
+  std::string title{"Asteroid Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
   SDL_SetWindowTitle(sdl_window, title.c_str());
 }

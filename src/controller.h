@@ -1,15 +1,17 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include "snake.h"
+#include "spaceship.h"
+#include "missile.h"
+#include "mouse.h"
+#include <vector>
 
 class Controller {
- public:
-  void HandleInput(bool &running, Snake &snake) const;
+public:
+    void HandleInput(bool &running, Spaceship &spaceship, std::vector<Missile> &missiles, Mouse &mouse);
 
- private:
-  void ChangeDirection(Snake &snake, Snake::Direction input,
-                       Snake::Direction opposite) const;
+private:
+
 };
 
 #endif
