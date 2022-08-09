@@ -43,3 +43,8 @@ void Asteroid::outOfBounds(int screen_w, int screen_h, float pos_x, float pos_y)
     // Check if asteroid went out of bounds
     out_of_bounds = (pos_x < 0.0 || pos_x > (float) screen_w) || (pos_y < 0.0 || pos_y > (float) screen_h);
 }
+
+void Asteroid::incrementSpeed(float increment)
+{
+    _speed.v += increment;
+}

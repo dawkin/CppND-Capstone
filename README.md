@@ -1,11 +1,17 @@
 # CPPND: Capstone Asteroid Game
 This Project is based on a fork of the Capstone Snake Game, the game structure and some component are recycled in this new
 game. This version fo the asteroid is simple and let you shoot asteroid while the score is incremented at each destroyed 
-asteroid. You simply have to click left in the direction of the asteroid. The aim cross indicate the shooting direction.
+asteroid. 
 
 Here is an image as an example of the game design.
 
 ![](asteroid_screenshot.png)
+
+## How to play
+The game is quite simple, you only need a mouse to play it. On the screen you can see the mouse pointer represented 
+by an aim cross. Use the left button of the mouse the shoot a missile in the direction of the asteroid. Each time you
+ destroy an asteroid your score increase by one but the asteroid is getting faster. The goal of this game is to get the 
+highest possible score. 
 
 ## File and Class structure
 All source code and header files are contained inside the /src repository.

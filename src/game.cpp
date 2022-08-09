@@ -147,6 +147,8 @@ void Game::collisionCheck(bool &running)
         if (collision(m, _asteroid))
         {
             score += 1;
+            // Place the asteroid on a new location and increase the speed
+            _asteroid.incrementSpeed(10.0);
             _asteroid.spawn();
         }
     }

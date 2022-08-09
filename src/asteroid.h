@@ -13,6 +13,7 @@ public:
     Asteroid();
     void update(int screen_w, int screen_h, Uint32 elapsed_time) override;
     void spawn();
+    void incrementSpeed(float increment);
     bool out_of_bounds = false;
 private:
     void outOfBounds(int screen_w, int screen_h, float pos_x, float pos_y);
