@@ -9,9 +9,9 @@ Here is an image as an example of the game design.
 
 ## How to play
 The game is quite simple, you only need a mouse to play it. On the screen you can see the mouse pointer represented 
-by an aim cross. Use the left button of the mouse the shoot a missile in the direction of the asteroid. Each time you
- destroy an asteroid your score increase by one but the asteroid is getting faster. The goal of this game is to get the 
-highest possible score. 
+by an aim cross. Use the left button of the mouse, by pressing it you shoot a missile in the direction of the pointer. 
+Each time you destroy an asteroid your score increase by one but the asteroid is getting faster. The goal of this game 
+is to get the highest possible score. 
 
 ## File and Class structure
 All source code and header files are contained inside the /src repository.
